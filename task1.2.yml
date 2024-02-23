@@ -1,0 +1,41 @@
+- hosts: task1.2
+  tasks:
+  - name: Install Apache
+    yum:
+      name: httpd
+      state: latest
+  
+  
+  - name: Start service httpd, if not started
+    ansible.builtin.service:
+      name: httpd
+      state: started
+  - name: Disable SELinux
+    selinux:
+      state: disabled
+
+  - name: Enable service httpd, and not touch the state
+    service:
+      name: httpd
+      enabled: yes
+
+  - name: Download Template
+    get_url:
+      url: https://www.free-css.com/assets/files/free-css-templates/download/page296/carvilla.zip
+      dest: /tmp/carvilla.zip
+
+  - name: Install Unzip
+    yum:
+      name: unzip
+      state: latest
+
+  - name: Unarchive a file that is already on the remote machine
+    unarchive:
+      src: /tmp/carvilla.zip
+      dest: /tmp/
+      remote_src: yes  
+
+  - name: Move Template file to /var/www/html
+    shell: "mv /tmp/carvilla-v1.0   /var/www/html"
+    args:
+      creates: /var/www/html/carvilla-v1.0
